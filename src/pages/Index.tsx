@@ -87,7 +87,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="glass rounded-2xl px-5 py-3 flex items-center justify-between">
             <a href="#" className="font-display font-extrabold text-lg tracking-tight">
-              Директ<span className="text-gradient">Про</span>
+              Игнат Шевченко<span className="text-gradient"> ПРО</span>
             </a>
             <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
               {NAV.map((n) => (
@@ -157,9 +157,9 @@ const Index = () => {
             </div>
             <div>
               <p className="text-accent font-semibold mb-3">Обо мне</p>
-              <h2 className="font-display font-extrabold text-3xl md:text-4xl leading-tight">Маркетолог, который думает о вашей прибыли</h2>
+              <h2 className="font-display font-extrabold text-3xl md:text-4xl leading-tight">Игнат Шевченко — директолог Яндекс Директ</h2>
               <p className="mt-5 text-muted-foreground leading-relaxed">
-                Меня зовут Алексей. 7 лет настраиваю Яндекс Директ для бизнеса в России. Не гоняюсь за кликами — фокусируюсь на заявках и продажах.
+                7 лет настраиваю Яндекс Директ для бизнеса в России. Не гоняюсь за кликами — фокусируюсь на заявках и продажах вашей компании.
               </p>
               <ul className="mt-6 space-y-3">
                 {['Сертифицированный специалист Яндекс', 'Работаю по договору и с гарантией', 'Отчётность каждую неделю'].map((t) => (
@@ -331,8 +331,8 @@ const Index = () => {
 
       <footer className="py-10 border-t border-border">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <span className="font-display font-extrabold text-foreground">Директ<span className="text-gradient">Про</span></span>
-          <span>© 2026 · Реклама в Яндекс Директ под ключ</span>
+          <span className="font-display font-extrabold text-foreground">Игнат Шевченко<span className="text-gradient"> ПРО</span></span>
+          <span>© 2026 · Игнат Шевченко, директолог Яндекс Директ</span>
         </div>
       </footer>
     </div>
