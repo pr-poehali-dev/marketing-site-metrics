@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 
-const MARKETER_PHOTO = 'https://cdn.poehali.dev/projects/35c8aaef-dcc1-4674-8981-22a664c1bb6b/files/4fc73533-a1fc-4df1-8633-7deb297dc8e6.jpg';
+const MARKETER_PHOTO = 'https://cdn.poehali.dev/projects/35c8aaef-dcc1-4674-8981-22a664c1bb6b/bucket/b1727ef0-0ff7-4dd1-be85-62ee2b4b68a5.jpeg';
 
 const NAV = [
   { label: 'Обо мне', href: '#about' },
