@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 
@@ -74,6 +74,21 @@ const POSTS = [
 
 const Index = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      const total = rect.height;
+      const progress = Math.min(Math.max(-rect.top / total, 0), 1);
+      setScrollProgress(progress);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -114,36 +129,59 @@ const Index = () => {
         </div>
       </header>
 
-      <section className="relative pt-40 pb-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-sm mb-8 animate-fade-up">
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-              Беру 2 проекта в июне
-            </div>
-            <h1 className="font-display font-black text-5xl md:text-7xl leading-[1.05] tracking-tight animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              Привожу клиентов<br />из <span className="text-gradient animate-gradient-x">Яндекс Директ</span>
-            </h1>
-            <p className="mt-7 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
-              Настраиваю рекламу, которая приносит заявки, а не сливает бюджет. Прозрачная аналитика и рост продаж с первого месяца.
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style={{ animationDelay: '0.3s' }}>
-              <Button size="lg" className="bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl text-base h-14 px-8 glow hover:opacity-90" asChild>
-                <a href="#zoom"><Icon name="Video" size={20} className="mr-2" />Записаться на Zoom-встречу</a>
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-xl text-base h-14 px-8 border-border bg-transparent hover:bg-muted" asChild>
-                <a href="#cases">Смотреть кейсы</a>
-              </Button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-20 max-w-5xl mx-auto">
-            {STATS.map((s, i) => (
-              <div key={s.label} className="glass rounded-2xl p-6 text-center animate-fade-up" style={{ animationDelay: `${0.4 + i * 0.1}s` }}>
-                <div className="font-display font-extrabold text-3xl md:text-4xl text-gradient">{s.value}</div>
-                <div className="text-sm text-muted-foreground mt-2">{s.label}</div>
+      <section ref={heroRef} className="relative pt-40 pb-24" style={{ minHeight: '190vh' }}>
+        <div className="sticky top-0 pt-40 pb-10">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-sm mb-8 animate-fade-up">
+                <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                Беру 2 проекта в июне
               </div>
-            ))}
+              <h1 className="font-display font-black text-5xl md:text-7xl leading-[1.05] tracking-tight animate-fade-up" style={{ animationDelay: '0.1s' }}>
+                Привожу клиентов<br />из <span className="text-gradient animate-gradient-x">Яндекс Директ</span>
+              </h1>
+              <p className="mt-7 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                Настраиваю рекламу, которая приносит заявки, а не сливает бюджет. Прозрачная аналитика и рост продаж с первого месяца.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center animate-fade-up" style={{ animationDelay: '0.3s' }}>
+                <Button size="lg" className="bg-gradient-to-r from-primary to-secondary text-white font-semibold rounded-xl text-base h-14 px-8 glow hover:opacity-90" asChild>
+                  <a href="#zoom"><Icon name="Video" size={20} className="mr-2" />Записаться на Zoom-встречу</a>
+                </Button>
+                <Button size="lg" variant="outline" className="rounded-xl text-base h-14 px-8 border-border bg-transparent hover:bg-muted" asChild>
+                  <a href="#cases">Смотреть кейсы</a>
+                </Button>
+              </div>
+            </div>
+
+            <div
+              className="relative mx-auto mt-14 rounded-[2rem] overflow-hidden glow"
+              style={{
+                maxWidth: `${640 + scrollProgress * 560}px`,
+                transform: `scale(${0.94 + scrollProgress * 0.06})`,
+                opacity: 0.5 + scrollProgress * 0.5,
+                transition: 'max-width 0.05s linear, transform 0.05s linear, opacity 0.05s linear',
+              }}
+            >
+              <div className="absolute -inset-6 bg-gradient-to-tr from-primary via-secondary to-accent rounded-[2.5rem] blur-3xl opacity-30 -z-10" />
+              <video
+                src="/video/hero.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full aspect-video object-cover"
+              />
+              <div className="absolute inset-0 ring-1 ring-white/10 rounded-[2rem]" />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 max-w-5xl mx-auto">
+              {STATS.map((s, i) => (
+                <div key={s.label} className="glass rounded-2xl p-6 text-center animate-fade-up" style={{ animationDelay: `${0.4 + i * 0.1}s` }}>
+                  <div className="font-display font-extrabold text-3xl md:text-4xl text-gradient">{s.value}</div>
+                  <div className="text-sm text-muted-foreground mt-2">{s.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
