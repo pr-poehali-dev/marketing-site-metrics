@@ -74,16 +74,19 @@ const POSTS = [
 
 const Index = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const heroRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const durationRef = useRef(6.1);
 
   useEffect(() => {
     const onScroll = () => {
-      if (!heroRef.current) return;
+      if (!heroRef.current || !videoRef.current) return;
       const rect = heroRef.current.getBoundingClientRect();
-      const total = rect.height;
-      const progress = Math.min(Math.max(-rect.top / total, 0), 1);
-      setScrollProgress(progress);
+      const scrollable = rect.height - window.innerHeight;
+      const progress = scrollable > 0 ? Math.min(Math.max(-rect.top / scrollable, 0), 1) : 0;
+      if (videoRef.current.readyState >= 1) {
+        videoRef.current.currentTime = progress * durationRef.current;
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
@@ -129,9 +132,22 @@ const Index = () => {
         </div>
       </header>
 
-      <section ref={heroRef} className="relative pt-40 pb-24" style={{ minHeight: '190vh' }}>
-        <div className="sticky top-0 pt-40 pb-10">
-          <div className="container mx-auto px-4">
+      <section ref={heroRef} className="relative" style={{ height: '700vh' }}>
+        <div className="sticky top-0 h-screen overflow-hidden flex flex-col">
+          <video
+            ref={videoRef}
+            src="/video/hero.mp4"
+            muted
+            playsInline
+            preload="auto"
+            onLoadedMetadata={(e) => {
+              durationRef.current = e.currentTarget.duration || 6.1;
+            }}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/90 via-background/50 to-background" />
+
+          <div className="relative container mx-auto px-4 pt-40 flex-1 flex flex-col">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 glass rounded-full px-4 py-2 text-sm mb-8 animate-fade-up">
                 <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
@@ -153,34 +169,18 @@ const Index = () => {
               </div>
             </div>
 
-            <div
-              className="relative mx-auto mt-14 rounded-[2rem] overflow-hidden glow"
-              style={{
-                maxWidth: `${640 + scrollProgress * 560}px`,
-                transform: `scale(${0.94 + scrollProgress * 0.06})`,
-                opacity: 0.5 + scrollProgress * 0.5,
-                transition: 'max-width 0.05s linear, transform 0.05s linear, opacity 0.05s linear',
-              }}
-            >
-              <div className="absolute -inset-6 bg-gradient-to-tr from-primary via-secondary to-accent rounded-[2.5rem] blur-3xl opacity-30 -z-10" />
-              <video
-                src="/video/hero.mp4"
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full aspect-video object-cover"
-              />
-              <div className="absolute inset-0 ring-1 ring-white/10 rounded-[2rem]" />
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-14 max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-auto mb-10 max-w-5xl mx-auto w-full">
               {STATS.map((s, i) => (
                 <div key={s.label} className="glass rounded-2xl p-6 text-center animate-fade-up" style={{ animationDelay: `${0.4 + i * 0.1}s` }}>
                   <div className="font-display font-extrabold text-3xl md:text-4xl text-gradient">{s.value}</div>
                   <div className="text-sm text-muted-foreground mt-2">{s.label}</div>
                 </div>
               ))}
+            </div>
+
+            <div className="relative pb-6 flex flex-col items-center gap-2 text-muted-foreground text-xs animate-pulse">
+              <Icon name="ChevronDown" size={18} />
+              Листайте вниз
             </div>
           </div>
         </div>
